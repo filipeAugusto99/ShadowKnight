@@ -11,11 +11,21 @@ config_version=5
 [application]
 
 config/name="ShadowKnightGame"
+run/main_scene="uid://61xlc88d5rg5"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [display]
 
+window/size/viewport_width=320
+window/size/viewport_height=180
+window/size/window_width_override=640
+window/size/window_height_override=360
 window/stretch/mode="canvas_items"
+
+[editor]
+
+naming/scene_name_casing=1
+naming/script_name_casing=1
 
 [physics]
 
