@@ -25,6 +25,14 @@ const GRAVITY: float = 690.0
 var _jumped: bool = false
 
 
+# Variables for animation tree
+var is_still: bool:
+	get: return is_zero_approx(velocity.x)
+var is_falling: bool:
+	get: return velocity.y > 0
+var is_ground: bool:
+	get: return is_on_floor()
+
 
 # Manage input unhandled by UI
 func _unhandled_input(event: InputEvent) -> void:
