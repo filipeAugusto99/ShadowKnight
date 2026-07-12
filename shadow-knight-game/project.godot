@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ShadowKnightGame"
-run/main_scene="uid://61xlc88d5rg5"
+run/main_scene="uid://dvr3vh1v4pby"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [display]
