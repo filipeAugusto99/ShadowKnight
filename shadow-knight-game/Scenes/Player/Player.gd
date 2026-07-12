@@ -23,6 +23,7 @@ const GRAVITY: float = 690.0
 
 # Variables
 var _jumped: bool = false
+var _start_position: Vector2
 
 
 # Variables for animation tree
@@ -38,6 +39,10 @@ var is_ground: bool:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("jump") and is_on_floor():
 		_jumped = true
+
+
+func _ready() -> void:
+	_start_position = position
 
 
 # This function is calleble frame by frame
@@ -83,3 +88,8 @@ func flip_sprite() -> void:
 	# if my velocity in x is different 0 or almost 0, flip the image
 	if not is_zero_approx(velocity.x):
 		sprite_2d.flip_h = velocity.x < 0
+
+
+func fell_off() -> void:
+	position = _start_position
+	set_position.call_deferred(_start_position)

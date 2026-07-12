@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://61xlc88d5rg5" path="res://Scenes/ScrollingBg/ScrollingBg.tscn" id="1_5ufo3"]
 [ext_resource type="Texture2D" uid="uid://u2u05o8b08b8" path="res://assets/tile/terrain/floor_autotile.png" id="2_bgw71"]
 [ext_resource type="PackedScene" uid="uid://cb2ls3jjwj7qp" path="res://Scenes/Player/Player.tscn" id="3_78m1b"]
+[ext_resource type="PackedScene" uid="uid://bx6ycsejh8a1t" path="res://Scenes/KillZone/KillZone.tscn" id="4_3lxj6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_78m1b"]
 texture = ExtResource("2_bgw71")
@@ -353,3 +354,5 @@ tile_set = SubResource("TileSet_3lxj6")
 
 [node name="Player" parent="." unique_id=198238159 instance=ExtResource("3_78m1b")]
 position = Vector2(77, 109)
+
+[node name="KillZone" parent="." unique_id=1690847128 instance=ExtResource("4_3lxj6")]
