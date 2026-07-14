@@ -6,7 +6,7 @@
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ej50p"]
 radius = 6.0
-height = 32.0
+height = 25.0
 
 [sub_resource type="Animation" id="Animation_h54ih"]
 length = 0.001
@@ -169,7 +169,8 @@ states/run/position = Vector2(541.3957, 100)
 transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_4wape"), "idle", "run", SubResource("AnimationNodeStateMachineTransition_t26db"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_h54ih")]
 graph_offset = Vector2(77.395676, 0)
 
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_825xp"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_t26db"]
+animation = &"hurt"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ji083"]
 advance_mode = 2
@@ -182,26 +183,50 @@ advance_expression = "!is_ground"
 advance_mode = 2
 advance_expression = "is_ground"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_i5acl"]
+advance_mode = 2
+advance_expression = "is_hurt"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_epg6k"]
+advance_mode = 2
+advance_expression = "is_hurt"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_0u84n"]
+advance_mode = 2
+advance_expression = "!is_hurt"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_esmjy"]
+advance_mode = 2
+advance_expression = "!is_hurt"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ej50p"]
 states/Air/node = SubResource("AnimationNodeStateMachine_h54ih")
 states/Air/position = Vector2(683.44977, 100)
 states/Ground/node = SubResource("AnimationNodeStateMachine_fk5o5")
 states/Ground/position = Vector2(442.4498, 100)
-states/Hurt/node = SubResource("AnimationNodeStateMachine_825xp")
-states/Hurt/position = Vector2(569.4498, 200)
-transitions = ["Start", "Ground", SubResource("AnimationNodeStateMachineTransition_ji083"), "Ground", "Air", SubResource("AnimationNodeStateMachineTransition_825xp"), "Air", "Ground", SubResource("AnimationNodeStateMachineTransition_0kmp4")]
+states/hurt/node = SubResource("AnimationNodeAnimation_t26db")
+states/hurt/position = Vector2(574.44977, 185)
+transitions = ["Start", "Ground", SubResource("AnimationNodeStateMachineTransition_ji083"), "Ground", "Air", SubResource("AnimationNodeStateMachineTransition_825xp"), "Air", "Ground", SubResource("AnimationNodeStateMachineTransition_0kmp4"), "Ground", "hurt", SubResource("AnimationNodeStateMachineTransition_i5acl"), "Air", "hurt", SubResource("AnimationNodeStateMachineTransition_epg6k"), "hurt", "Ground", SubResource("AnimationNodeStateMachineTransition_0u84n"), "hurt", "Air", SubResource("AnimationNodeStateMachineTransition_esmjy")]
 graph_offset = Vector2(111.44979, 0)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h54ih"]
+radius = 4.1231055
 
 [node name="Player" type="CharacterBody2D" unique_id=198238159]
 script = ExtResource("1_ft8w5")
+camera_left = 34
+camera_top = 0
+camera_bottom = 164
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=576955923]
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("1_s0eop")
 hframes = 8
 vframes = 11
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1265902496]
 position = Vector2(-1, 12)
+scale = Vector2(0.8, 0.8)
 shape = SubResource("CapsuleShape2D_ej50p")
 
 [node name="PlayerCam" parent="." unique_id=1648408566 instance=ExtResource("3_h54ih")]
@@ -213,3 +238,18 @@ libraries/ = SubResource("AnimationLibrary_jmcll")
 tree_root = SubResource("AnimationNodeStateMachine_ej50p")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
+
+[node name="HitArea" type="Area2D" parent="." unique_id=1009692946]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea" unique_id=1367532637]
+position = Vector2(-1, 9)
+shape = SubResource("CircleShape2D_h54ih")
+
+[node name="HurtTimer" type="Timer" parent="." unique_id=1563284554]
+wait_time = 0.6
+one_shot = true
+
+[connection signal="area_entered" from="HitArea" to="." method="_on_hit_area_entered"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]

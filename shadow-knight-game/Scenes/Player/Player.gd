@@ -11,22 +11,32 @@ extends CharacterBody2D
 const GRAVITY: float = 690.0
 
 
-# Onready
-@onready var sprite_2d: Sprite2D = $Sprite2D
-
-
 # Export Variables
 @export var run_speed: float = 100.0
 @export var jump_speed: float = -280.0
 @export var max_fall_speed: float = 300.0
+@export var hurt_velocity: Vector2 = Vector2(0.0, -140.0)
+@export var camera_left: int = -10000
+@export var camera_right: int = 10000
+@export var camera_top: int = -10000
+@export var camera_bottom: int = 10000
+
+
+# Onready
+@onready var sprite_2d: Sprite2D = $Sprite2D
+@onready var player_cam: Camera2D = $PlayerCam
+@onready var hurt_timer: Timer = $HurtTimer
 
 
 # Variables
 var _jumped: bool = false
 var _start_position: Vector2
+var _is_hurt: bool = false
 
 
 # Variables for animation tree
+var is_hurt: bool:
+	get: return _is_hurt
 var is_still: bool:
 	get: return is_zero_approx(velocity.x)
 var is_falling: bool:
@@ -43,6 +53,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _ready() -> void:
 	_start_position = position
+	set_camera_limits()
+	
+
+func set_camera_limits() -> void:
+	player_cam.limit_bottom = camera_bottom
+	player_cam.limit_left = camera_left
+	player_cam.limit_right = camera_right
+	player_cam.limit_top = camera_top
 
 
 # This function is calleble frame by frame
@@ -59,6 +77,7 @@ func _physics_process(delta: float) -> void:
 
 
 func handle_moviment() -> void:
+	if _is_hurt: return
 	horizontal_moviment()
 	vertical_moviment()
 	
@@ -93,3 +112,18 @@ func flip_sprite() -> void:
 func fell_off() -> void:
 	position = _start_position
 	set_position.call_deferred(_start_position)
+
+
+func apply_hurt_jump() -> void:
+	if _is_hurt: return
+	_is_hurt = true
+	hurt_timer.start()
+	velocity = hurt_velocity
+	
+
+func _on_hit_area_entered(area: Area2D) -> void:
+	apply_hurt_jump.call_deferred()
+	
+
+func _on_hurt_timer_timeout() -> void:
+	_is_hurt = false
